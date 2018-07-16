@@ -92,7 +92,7 @@ namespace CDScheduler
 
         private void PushPackage(string package_id)
         {
-            string push_command = "cmd /k nuget push " + settings.package_output + package_id+".nupkg " + settings.api_password + " -Source " +settings.push_location;
+            string push_command = "cmd /c nuget push " + settings.package_output + package_id+".nupkg " + settings.api_password + " -Source " +settings.push_location;
             File.AppendAllText(service_content_path + "log.txt",
                          DateTime.Now + "\tPush command: "+ push_command + "\n");
             File.WriteAllText(service_content_path + "push.bat", push_command, Encoding.UTF8);
