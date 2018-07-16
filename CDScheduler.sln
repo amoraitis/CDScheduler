@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDScheduler", "CDScheduler\CDScheduler.csproj", "{04D78E39-B3E2-4630-9CC0-47598EBEC6A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CDScheduler", "CDScheduler\CDScheduler.csproj", "{04D78E39-B3E2-4630-9CC0-47598EBEC6A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDScheduler.Test", "CDScheduler.Test\CDScheduler.Test.csproj", "{E7836607-C275-479E-8D75-577062082336}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{04D78E39-B3E2-4630-9CC0-47598EBEC6A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04D78E39-B3E2-4630-9CC0-47598EBEC6A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04D78E39-B3E2-4630-9CC0-47598EBEC6A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7836607-C275-479E-8D75-577062082336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7836607-C275-479E-8D75-577062082336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7836607-C275-479E-8D75-577062082336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7836607-C275-479E-8D75-577062082336}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
