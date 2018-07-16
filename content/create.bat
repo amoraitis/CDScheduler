@@ -1,0 +1,1 @@
+cmd /c dotnet pack 

@@ -1,0 +1,1 @@
+﻿cmd /c nuget push C:/Users/tasos/EclassMobileApi/EclassApi/bin/Debug/EclassApi.1.1.10.nupkg defaultPass -Source C:/MonitorService/
