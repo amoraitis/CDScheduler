@@ -41,7 +41,7 @@ namespace CDScheduler
                 if (!File.Exists(service_content_path + "last_commit"))
                 {
                     File.CreateText(service_content_path + "last_commit");
-                    File.AppendAllText(service_content_path + "create.bat", settings.csproj_location, Encoding.UTF8);
+                    File.WriteAllText(service_content_path + "create.bat", "cmd /c dotnet pack " + settings.csproj_location);
                 }
             }
             catch(Exception e)
@@ -60,26 +60,36 @@ namespace CDScheduler
             System.Collections.Generic.IEnumerator<Commit> enumerator = repo.Commits.GetEnumerator();
             enumerator.MoveNext();
             DateTime lastUpdated = enumerator.Current.Committer.When.ToUniversalTime().DateTime;
-            if (File.ReadAllText(service_content_path + "last_commit").Length == 0)
+            try
             {
-                File.AppendAllText(service_content_path + "last_commit",
-                    lastUpdated.ToString());
-                
-            }
-            else
-            {
-                if (File.ReadAllText(service_content_path + "last_commit").Equals(lastUpdated))
+                if (File.ReadAllText(service_content_path + "last_commit").Length == 0)
+                {
+                    File.AppendAllText(service_content_path + "last_commit",
+                        lastUpdated.ToString());
+
+                }
+                else
+                {
+                    if (File.ReadAllText(service_content_path + "last_commit").Equals(lastUpdated))
+                    {
+                        if (!File.Exists(service_content_path + "log.txt"))
+                            File.CreateText(service_content_path + "log.txt");
+                        File.AppendAllText(service_content_path + "log.txt",
+                             DateTime.Now + "\tAlready updated: " + "\n");
+                        return;
+                    }
+                    File.WriteAllText(service_content_path + "last_commit",
+                        lastUpdated.ToString());
+                    CreatePackage();
+                }
+                }catch(Exception e)
                 {
                     if (!File.Exists(service_content_path + "log.txt"))
                         File.CreateText(service_content_path + "log.txt");
                     File.AppendAllText(service_content_path + "log.txt",
-                         DateTime.Now + "\tAlready updated: "+ "\n");
-                    return;
+                         DateTime.Now + "\tError occurred while updating last commit: " + e.Message + "\n");
                 }
-                File.WriteAllText(service_content_path + "last_commit",
-                    lastUpdated.ToString());
-                CreatePackage();
-            }
+           
         }
 
         public void CreatePackage()
@@ -95,7 +105,7 @@ namespace CDScheduler
             string push_command = "cmd /c nuget push " + settings.package_output + package_id+".nupkg " + settings.api_password + " -Source " +settings.push_location;
             File.AppendAllText(service_content_path + "log.txt",
                          DateTime.Now + "\tPush command: "+ push_command + "\n");
-            File.WriteAllText(service_content_path + "push.bat", push_command, Encoding.UTF8);
+            File.WriteAllText(service_content_path + "push.bat", push_command);
             Thread.Sleep(200);
             Process.Start(service_content_path + "push.bat");
         }
