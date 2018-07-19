@@ -1,10 +1,12 @@
-﻿using DasMulli.Win32.ServiceUtils;
+﻿using Chroniton;
+using Chroniton.Jobs;
+using Chroniton.Schedules;
+using DasMulli.Win32.ServiceUtils;
 using LibGit2Sharp;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -25,11 +27,19 @@ namespace CDScheduler
         public string ServiceName => "Monitor Service";
         private Settings settings;
         private string service_content_path = "C:/MonitorService/";
+        private Singularity singularity;
 
         public void Start(string[] startupArguments, ServiceStoppedCallback serviceStoppedCallback)
         {
             ImportSettings();
-            GetAndCompareCommits();
+            singularity = Singularity.Instance;
+            var job = new SimpleJob((scheduledTime) =>
+                GetAndCompareCommits());
+            var schedule = new EveryXTimeSchedule(TimeSpan.FromSeconds(12));
+            var scheduledJob = singularity.ScheduleJob(schedule, job, true);
+
+            singularity.Start();
+            
         }
         
         public void ImportSettings()
@@ -121,6 +131,8 @@ namespace CDScheduler
         public void Stop()
         {
             // shut it down again
+            if(singularity!=null)
+                singularity.Stop();
         }
     }
 }
