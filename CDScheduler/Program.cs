@@ -97,7 +97,7 @@ namespace CDScheduler
                     if (!File.Exists(service_content_path + "log.txt"))
                         File.CreateText(service_content_path + "log.txt");
                     File.AppendAllText(service_content_path + "log.txt",
-                         DateTime.Now + "\tError occurred while updating last commit: " + e.Message + "\n");
+                         "\n" + DateTime.Now + "\tError occurred while updating last commit: " + e.Message + "\n");
                 }
            
         }
@@ -107,6 +107,8 @@ namespace CDScheduler
             string package_id = GetIdFromCsproj();
             Process.Start(service_content_path + "create.bat");
             Thread.Sleep(1000);
+            if (File.Exists(settings.push_location + package_id + ".nupkg"))
+                return;
             PushPackage(package_id);
         }
 
@@ -114,7 +116,7 @@ namespace CDScheduler
         {
             string push_command = "cmd /c nuget push " + settings.package_output + package_id+".nupkg " + settings.api_password + " -Source " +settings.push_location;
             File.AppendAllText(service_content_path + "log.txt",
-                         DateTime.Now + "\tPush command: "+ push_command + "\n");
+                         "\n" + DateTime.Now + "\tPush command: "+ push_command + "\n");
             File.WriteAllText(service_content_path + "push.bat", push_command);
             Thread.Sleep(200);
             Process.Start(service_content_path + "push.bat");
@@ -124,8 +126,19 @@ namespace CDScheduler
         {
             string xml = File.ReadAllText(settings.csproj_location);
             XDocument xDocument = XDocument.Parse(xml);
-            return xDocument.Root.Elements("PropertyGroup").Elements("id").First().Value + "."
+            string result = "";
+            try
+            {
+                result += xDocument.Root.Elements("PropertyGroup").Elements("id").First().Value + "."
                 + xDocument.Root.Elements("PropertyGroup").Elements("version").First().Value;
+            }
+            catch(Exception e)
+            {
+                File.AppendAllText(service_content_path + "log.txt",
+                         "\n" + DateTime.Now + "\tCouldn't get the package id from .csproj: " + e.Message + "\n");
+                Stop();
+            }
+            return result;
         }
 
         public void Stop()

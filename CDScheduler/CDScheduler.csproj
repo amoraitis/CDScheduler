@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Chroniton" Version="1.0.3.3" />
     <PackageReference Include="DasMulli.Win32.ServiceUtils" Version="1.2.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
